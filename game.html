@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الألعاب التعليمية</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: #f0f8ff;
+      color: #333;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: 10vh; /* لضمان بقاء الزر في أسفل الصفحة */
+    }
+
+    header {
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: #fff;
+      text-align: center;
+      padding: 5vh 0;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    header h1 {
+      font-size: 5vw;
+      margin-bottom: 1vh;
+    }
+
+    header p {
+      font-size: 3vw;
+      opacity: 0.9;
+    }
+
+    .game-container {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      padding: 5vh 10vw;
+      margin: 5vh auto;
+      width: 80%;
+      text-align: center;
+      position: relative;
+      transform: scale(0.95);
+      transition: all 0.3s ease;
+    }
+
+    .game-container:hover {
+      transform: scale(1);
+    }
+
+    .timer {
+      font-size: 4.5vw;
+      color: #2575fc;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    .question {
+      font-size: 5vw;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .options button {
+      background: #ffd700;
+      color: #333;
+      padding: 15px 30px;
+      border: none;
+      font-size: 3.5vw;
+      margin: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .options button:hover {
+      background: #ffc107;
+    }
+
+    .score {
+      font-size: 4.5vw;
+      color: #2575fc;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    .error-message {
+      font-size: 3.5vw;
+      color: #ff6347;
+      margin-top: 10px;
+      visibility: hidden;
+    }
+
+    .back-button {
+  font-size: 3vw;
+  background-color: #2575fc;
+  color: white;
+  border: none;
+  padding: 2vh 4vw;
+  border-radius: 12px;
+  cursor: pointer;
+  position: fixed;
+  bottom: 20px; /* الزر سيكون في أسفل الصفحة */
+  right: 20px; /* تحديد الموقع عند اليمين */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s, transform 0.2s ease-in-out;
+  z-index: 999; /* تأكيد أن الزر في الأعلى */
+}
+
+.back-button:hover {
+  background-color: #6a11cb;
+  transform: scale(1.05);
+}
+
+.back-button:active {
+  transform: scale(0.95);
+}
+
+
+
+    .name-input {
+      display: none;
+      text-align: center;
+      margin-top: 5vh;
+    }
+
+    .name-input input {
+      padding: 10px;
+      font-size: 2.5vw;
+      border: 2px solid #2575fc;
+      border-radius: 10px;
+      width: 60%;
+      margin-bottom: 2vh;
+    }
+
+    .name-input button {
+      background-color: #2575fc;
+      color: white;
+      padding: 2vh 4vw;
+      border-radius: 12px;
+      font-size: 2.5vw;
+      cursor: pointer;
+    }
+
+    .players-list {
+      display: none;
+      margin-top: 5vh;
+      padding: 3vh 0;
+    }
+
+    .players-list table {
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+
+    .players-list th, .players-list td {
+      padding: 10px;
+      border: 1px solid #2575fc;
+    }
+
+    .players-list th {
+      background-color: #2575fc;
+      color: white;
+    }
+
+    .players-list td {
+      background-color: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>✨ اللعبة التعليمية</h1>
+    <p>استمتع بالتعلم من خلال الأسئلة!</p>
+  </header>
+
+  <div class="game-container">
+    <div class="timer" id="timer">الوقت المتبقي: 100 ثانية</div>
+    <div class="question" id="question-container"></div>
+    <div class="options" id="options-container"></div>
+    <div class="score" id="score-container">النتيجة: 0</div>
+    <div class="error-message" id="error-message">إجابة خاطئة، حاول مرة أخرى!</div>
+
+    <div class="name-input" id="name-input">
+      <label for="player-name">أدخل اسمك:</label>
+      <input type="text" id="player-name" placeholder="اسم اللاعب">
+      <button class="submit-btn" onclick="submitName()">إرسال</button>
+    </div>
+  </div>
+
+  <div class="players-list" id="players-list">
+    <h2>قائمة اللاعبين والنقاط</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>اللاعب</th>
+          <th>النقاط</th>
+        </tr>
+      </thead>
+      <tbody id="players-table-body">
+        <!-- سيتم إضافة اللاعبين هنا -->
+      </tbody>
+    </table>
+  </div>
+
+  <button class="back-button" onclick="confirmGoBack()">رجوع</button>
+  
+  <script>
+const questions = [
+  { question: 'ما هو أكبر كوكب في المجموعة الشمسية؟', options: ['الأرض', 'المشتري', 'المريخ'], answer: 'المشتري' },
+  { question: 'كم عدد أيام الأسبوع؟', options: ['7', '5', '10'], answer: '7' },
+  { question: 'من هو أول رئيس للولايات المتحدة الأمريكية؟', options: ['أبراهام لينكولن', 'جورج واشنطن', 'توماس جيفرسون'], answer: 'جورج واشنطن' },
+  { question: 'ما هو العنصر الكيميائي الذي يرمز له بالرمز H؟', options: ['الأوكسجين', 'الهيدروجين', 'النيتروجين'], answer: 'الهيدروجين' },
+  { question: 'ما هي عاصمة فرنسا؟', options: ['باريس', 'مدريد', 'روما'], answer: 'باريس' },
+  { question: 'من هو مخترع الهاتف؟', options: ['توماس إديسون', 'ألكسندر جراهام بيل', 'نيوتن'], answer: 'ألكسندر جراهام بيل' },
+  { question: 'ما هو أكبر محيط على وجه الأرض؟', options: ['المحيط الهادئ', 'المحيط الأطلسي', 'المحيط الهندي'], answer: 'المحيط الهادئ' },
+  { question: 'كم عدد القارات في العالم؟', options: ['5', '6', '7'], answer: '7' },
+  { question: 'من هو مكتشف قوانين الحركة؟', options: ['ألبرت أينشتاين', 'إسحاق نيوتن', 'غاليليو'], answer: 'إسحاق نيوتن' },
+  { question: 'ما هو أكبر حيوان في العالم؟', options: ['الحوت الأزرق', 'الفيل', 'الدب القطبي'], answer: 'الحوت الأزرق' },
+  { question: 'من هو مؤسس علم الفيزياء؟', options: ['أينشتاين', 'نيوتن', 'جاليليو'], answer: 'نيوتن' },
+  { question: 'ما هو اللون الذي يرمز للسلام؟', options: ['الأزرق', 'الأبيض', 'الأخضر'], answer: 'الأبيض' },
+  { question: 'ما هو أطول نهر في العالم؟', options: ['نهر النيل', 'نهر الأمازون', 'نهر اليانغتسي'], answer: 'نهر النيل' },
+  { question: 'ما هي أول لغة برمجة؟', options: ['بايثون', 'سي', 'أسمبلي'], answer: 'أسمبلي' },
+  { question: 'من هو أول من صعد إلى الفضاء؟', options: ['يورى غاغارين', 'نيل آرمسترونغ', 'جاسينتو بيريز'], answer: 'يورى غاغارين' },
+  { question: 'ما هو العنصر الذي يرمز له بالرمز O؟', options: ['الأوكسجين', 'الأرجون', 'الأستاتين'], answer: 'الأوكسجين' },
+  { question: 'من هو أول من اخترع الطائرة؟', options: ['الأخوان رايت', 'توماس إديسون', 'مخترع المولد الكهربائي'], answer: 'الأخوان رايت' },
+  { question: 'ما هو أصغر كوكب في المجموعة الشمسية؟', options: ['عطارد', 'المريخ', 'الزهرة'], answer: 'عطارد' },
+  { question: 'ما هو أطول جبل في العالم؟', options: ['إيفرست', 'الكوهنابران', 'الأنوبيس'], answer: 'إيفرست' },
+  { question: 'ما هو نوع الشجرة الذي يتميز بإنتاج الصمغ؟', options: ['الصنوبر', 'البلوط', 'الزيتون'], answer: 'الصنوبر' },
+  { question: 'كم عدد الأسنان لدى الإنسان؟', options: ['28', '32', '36'], answer: '32' },
+  { question: 'ما هو الغاز الذي يمثل 78% من جو الأرض؟', options: ['الأوكسجين', 'النيتروجين', 'الأرجون'], answer: 'النيتروجين' },
+  { question: 'ما هي أول دولة في العالم أصدرت عملة معدنية؟', options: ['الصين', 'اليونان', 'مصر'], answer: 'اليونان' },
+  { question: 'ما هي اللغة الأكثر تحدثاً في العالم؟', options: ['الإنجليزية', 'الصينية', 'الإسبانية'], answer: 'الصينية' },
+  { question: 'من هو أول من اكتشف الكواكب؟', options: ['كبلر', 'غاليليو', 'نيوتن'], answer: 'غاليليو' },
+  { question: 'ماذا كان اسم أول حاسوب شخصي؟', options: ['آبل 1', 'حاسوب سيلكون', 'IBM 1500'], answer: 'آبل 1' },
+  { question: 'ما هو الحيوان الذي يعيش أطول مدة؟', options: ['السلحفاة', 'الفيل', 'القطط'], answer: 'السلحفاة' },
+  { question: 'ما هو أكبر طائر في العالم؟', options: ['النعام', 'الطائر الطنان', 'البطريق'], answer: 'النعام' },
+  { question: 'من هو مؤسس الفيسبوك؟', options: ['إيفان شبيغل', 'مارك زوكربيرغ', 'جاك دورسي'], answer: 'مارك زوكربيرغ' },
+  { question: 'ما هو أسرع حيوان بري؟', options: ['الفهد', 'الأسد', 'النمر'], answer: 'الفهد' },
+  { question: 'كم عدد ألوان قوس قزح؟', options: ['7', '8', '6'], answer: '7' },
+  { question: 'من هو صاحب نظرية النسبية؟', options: ['آينشتاين', 'نيوتن', 'داروين'], answer: 'آينشتاين' },
+  { question: 'ما هو أقرب كوكب إلى الشمس؟', options: ['عطارد', 'الزهرة', 'المريخ'], answer: 'عطارد' },
+  { question: 'ما هو أول كوكب بعد الأرض؟', options: ['المريخ', 'المشتري', 'الزحل'], answer: 'المريخ' },
+  { question: 'من هو مؤسس شركة مايكروسوفت؟', options: ['ستيف جوبز', 'بيل جيتس', 'مارك زوكربيرغ'], answer: 'بيل جيتس' },
+  { question: 'ما هو أكثر المعادن شيوعاً في القشرة الأرضية؟', options: ['الحديد', 'الألومنيوم', 'الذهب'], answer: 'الألومنيوم' },
+  { question: 'ما هو أطول برج في العالم؟', options: ['برج خليفة', 'برج شانغهاي', 'برج تايبيه 101'], answer: 'برج خليفة' },
+  { question: 'ما هي أسرع سيارة في العالم؟', options: ['بوغاتي شيرون', 'هينيسي فينوم', 'فيراري لافيراري'], answer: 'بوغاتي شيرون' },
+  { question: 'ما هو أكبر قمر في المجموعة الشمسية؟', options: ['قمر المشتري جاليليو', 'قمر الأرض', 'قمر زحل تيتان'], answer: 'قمر زحل تيتان' },
+  { question: 'من هو أول من أنشأ علم الكيمياء؟', options: ['ابن سينا', 'جابر بن حيان', 'الرازي'], answer: 'جابر بن حيان' },
+  { question: 'ما هي الألوان الأساسية؟', options: ['الأزرق, الأحمر, الأصفر', 'الأخضر, الأزرق, الأسود', 'الأزرق, الأبيض, الأحمر'], answer: 'الأزرق, الأحمر, الأصفر' },
+  { question: 'ما هي أصغر دولة في العالم؟', options: ['الفاتيكان', 'موناكو', 'سان مارينو'], answer: 'الفاتيكان' },
+  { question: 'من هو صاحب كتاب "نظرية الفستق"؟', options: ['فهد عامر', 'مصطفى محمود', 'أحمد شوقي'], answer: 'فهد عامر' },
+  { question: 'ما هي أول دولة صنعت الماس؟', options: ['جنوب أفريقيا', 'الهند', 'روسيا'], answer: 'الهند' },
+  { question: 'ما هو أقوى معدن؟', options: ['الماس', 'الذهب', 'الحديد'], answer: 'الماس' },
+  { question: 'من هو عالم الفضاء الذي اكتشف جاذبية الأرض؟', options: ['نيوتن', 'غاليليو', 'كبلر'], answer: 'نيوتن' },
+  { question: 'ما هو عاصمة اليابان؟', options: ['كيوتو', 'طوكيو', 'أوساكا'], answer: 'طوكيو' },
+  { question: 'ما هي أسرع طائرة في العالم؟', options: ['السبايدر إف-22', 'أف-35', 'هيليوس'], answer: 'هيليوس' },
+  { question: 'ما هو أكثر عنصر كيميائي موجود في جسم الإنسان؟', options: ['الأوكسجين', 'الهيدروجين', 'الكربون'], answer: 'الأوكسجين' },
+  { question: 'من هو أول عالم اخترع الميكروسكوب؟', options: ['أنطوني فان ليفنهوك', 'جاليليو', 'آينشتاين'], answer: 'أنطوني فان ليفنهوك' },
+  { question: 'ما هو أطول فيلم في تاريخ السينما؟', options: ['شاونوشيد', 'كلوز', 'ماكينة الزمن'], answer: 'شاونوشيد' },
+  { question: 'ما هي أكبر بحيرة في العالم؟', options: ['بحيرة قزوين', 'بحيرة البحيرات الكبرى', 'بحيرة فيكتوريا'], answer: 'بحيرة قزوين' },
+  { question: 'من هو أول من بنى الأهرام في مصر؟', options: ['الفرعون خوفو', 'الفرعون أحمس', 'الفرعون رمسيس'], answer: 'الفرعون خوفو' },
+  { question: 'ما هي أكبر قارة في العالم؟', options: ['آسيا', 'أفريقيا', 'أمريكا الشمالية'], answer: 'آسيا' },
+  { question: 'من هو مؤلف رواية "1984"؟', options: ['جورج أورويل', 'ألدوس هكسلي', 'إرنست همنغواي'], answer: 'جورج أورويل' },
+  { question: 'ما هي أكثر الدول سكاناً في العالم؟', options: ['الصين', 'الهند', 'الولايات المتحدة'], answer: 'الصين' },
+  { question: 'من هو أول من فاز بجائزة نوبل في الطب؟', options: ['إميل فيشر', 'توماس هاردي', 'رينيه لالوك'], answer: 'إميل فيشر' },
+  { question: 'ما هو أول حيوان تم استنساخه؟', options: ['الخروف دوللي', 'الكلب بيري', 'الفأر إيلي'], answer: 'الخروف دوللي' },
+  { question: 'ما هي أطول ساعة في العالم؟', options: ['ساعة مكة', 'ساعة برلين', 'ساعة دبي'], answer: 'ساعة مكة' },
+  { question: 'ما هو أطول جسر في العالم؟', options: ['جسر دانيان', 'جسر أكاشي كايكو', 'جسر هونغ كونغ'], answer: 'جسر أكاشي كايكو' },
+  { question: 'من هو مكتشف النيوترون؟', options: ['جيمس تشادويك', 'أينشتاين', 'نيوتن'], answer: 'جيمس تشادويك' },
+  { question: 'ما هي أكبر جزيرة في العالم؟', options: ['غرينلاند', 'أستراليا', 'مدغشقر'], answer: 'غرينلاند' },
+  { question: 'ما هو أقوى ديناميكياً في هذا الكون؟', options: ['الزخم', 'الجاذبية', 'التسارع'], answer: 'الزخم' },
+  { question: 'ما هو أول فيلم أكشن تم إنتاجه؟', options: ['مصارعة الثيران', 'الصراع على الإمبراطورية', 'المؤامرة الكبرى'], answer: 'مصارعة الثيران' },
+];
+
+
+    let score = 0;
+    let timeLeft = 100;
+    let currentQuestionIndex = 0;
+    let timerInterval;
+    let players = JSON.parse(localStorage.getItem('players')) || []; // قراءة البيانات المخزنة من localStorage
+
+    function startNewQuestion() {
+      const randomIndex = Math.floor(Math.random() * questions.length);
+      const questionData = questions[randomIndex];
+      currentQuestionIndex = randomIndex;
+
+      // عرض السؤال والخيارات
+      document.getElementById('question-container').innerHTML = questionData.question;
+      const optionsContainer = document.getElementById('options-container');
+      optionsContainer.innerHTML = '';
+
+      questionData.options.forEach(option => {
+        const button = document.createElement('button');
+        button.innerText = option;
+        button.onclick = () => checkAnswer(option);
+        optionsContainer.appendChild(button);
+      });
+
+      // إخفاء رسالة الإجابة الخاطئة إذا كانت مرئية
+      document.getElementById('error-message').style.visibility = 'hidden';
+    }
+
+    function checkAnswer(selectedOption) {
+      const correctAnswer = questions[currentQuestionIndex].answer;
+      if (selectedOption === correctAnswer) {
+        score++;
+        document.getElementById('score-container').innerText = `النتيجة: ${score}`;
+      } else {
+        // إظهار رسالة الإجابة الخاطئة
+        document.getElementById('error-message').style.visibility = 'visible';
+      }
+
+      // الانتقال إلى السؤال التالي بعد فترة قصيرة
+      setTimeout(startNewQuestion, 1000);
+    }
+
+    function startTimer() {
+      timerInterval = setInterval(function() {
+        timeLeft--;
+        document.getElementById('timer').innerText = `الوقت المتبقي: ${timeLeft} ثانية`;
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function endGame() {
+      // عرض إدخال الاسم بعد انتهاء اللعبة
+      document.getElementById('name-input').style.display = 'block';
+      document.getElementById('players-list').style.display = 'block';
+    }
+
+    function submitName() {
+      const playerName = document.getElementById('player-name').value;
+      if (playerName) {
+        // إضافة اللاعب إلى قائمة اللاعبين
+        players.push({ name: playerName, score: score });
+        updatePlayersList();
+
+        // حفظ البيانات في localStorage
+        localStorage.setItem('players', JSON.stringify(players));
+
+        // إخفاء إدخال الاسم بعد إرسال الاسم
+        document.getElementById('name-input').style.display = 'none';
+      }
+    }
+
+    function updatePlayersList() {
+      const playersTableBody = document.getElementById('players-table-body');
+      playersTableBody.innerHTML = '';
+
+      players.forEach(player => {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${player.name}</td><td>${player.score}</td>`;
+        playersTableBody.appendChild(row);
+      });
+    }
+
+    function confirmGoBack() {
+      if (confirm("هل أنت متأكد أنك تريد الرجوع؟")) {
+        window.location.href = "good-learn.html";
+      }
+    }
+
+    // تحديث قائمة اللاعبين عند تحميل الصفحة
+    updatePlayersList();
+
+    // بدء اللعبة
+    startTimer();
+    startNewQuestion();
+  </script>
+</body>
+</html>

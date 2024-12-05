@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الأنشطة اليدوية</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* تصميم عام */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%; /* تأكد من أن الصفحة ستأخذ كامل الشاشة */
+      overflow-y: scroll; /* التأكد من تمكين التمرير عموديًا */
+    }
+
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: auto; /* تمكين التمرير */
+      flex-direction: column;
+    }
+
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      padding: 3vh 5vw;
+      border-radius: 20px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+      width: 100%;
+      max-width: 800px;
+      overflow-y: auto; /* تمكين التمرير */
+    }
+
+    .app-header {
+      text-align: center;
+      padding: 2vh;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      width: 100%;
+      margin-bottom: 3vh;
+    }
+
+    .app-header h1 {
+      font-size: 4vw;
+      margin-bottom: 1vh;
+    }
+
+    .app-header p {
+      font-size: 3vw;
+      opacity: 0.8;
+    }
+
+    .app-main {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4vh;
+      padding: 5vw;
+      width: 100%;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 5vh 3vw;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, scale 0.2s ease;
+      cursor: pointer;
+      animation: cardFadeIn 1s ease-out;
+    }
+
+    .card:hover {
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .card i {
+      font-size: 8vw;
+      margin-bottom: 2vh;
+      color: #ffd700;
+      transition: transform 0.3s ease, color 0.2s ease;
+    }
+
+    .card:hover i {
+      transform: rotate(15deg);
+      color: #ff6347;
+    }
+
+    .card h2 {
+      font-size: 5vw;
+      margin-bottom: 1vh;
+    }
+
+    .card p {
+      font-size: 4vw;
+      opacity: 0.8;
+    }
+
+    /* تنسيق الخطوات */
+    .steps-container {
+      display: none;
+      margin-top: 2vh;
+      text-align: right;
+    }
+
+    .step {
+      display: none;
+    }
+
+    .step.active {
+      display: block;
+      animation: fadeInStep 0.5s ease-in-out;
+    }
+
+    .step p {
+      font-size: 3vw;
+      margin-bottom: 2vh;
+    }
+
+    .step img {
+      width: 100%;
+      margin-bottom: 2vh;
+    }
+
+    .next-btn, .prev-btn {
+      background-color: #ffd700;
+      color: #333;
+      padding: 1.5vh 3vw;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-size: 3vw;
+      transition: background 0.3s ease;
+    }
+
+    .next-btn:hover, .prev-btn:hover {
+      background: #ffc107;
+    }
+
+    @media (max-width: 480px) {
+      .app-header h1 {
+        font-size: 8vw;
+      }
+
+      .app-header p {
+        font-size: 5vw;
+      }
+
+      .card {
+        padding: 4vh 2vw;
+      }
+
+      .card i {
+        font-size: 10vw;
+      }
+
+      .card h2 {
+        font-size: 6vw;
+      }
+
+      .card p {
+        font-size: 4.5vw;
+      }
+    }
+
+    @keyframes cardFadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInStep {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    function showSteps(activityId) {
+      // إظهار خطوات النشاط المحدد
+      const stepsContainers = document.querySelectorAll('.step');
+      stepsContainers.forEach(step => {
+        step.classList.remove('active');
+      });
+      const selectedSteps = document.getElementById(`${activityId}-steps`);
+      if (selectedSteps) {
+        selectedSteps.classList.add('active');
+      }
+  
+      // التمرير التلقائي إلى أسفل الصفحة
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+  </script>
+  
+  <div class="app-container">
+    <header class="app-header">
+      <h1>✨ الأنشطة اليدوية</h1>
+      <p>أنشئ مشاريع بسيطة وتعلم بالعمل اليدوي.</p>
+    </header>
+
+    <main class="app-main">
+      <!-- النشاطات -->
+      <div class="card" onclick="showSteps('wood-painting')">
+        <i class="fa-solid fa-paintbrush"></i>
+        <h2>رسم على الخشب</h2>
+        <p>استخدم الألوان المائية أو الأكريليك لرسم أشكال جميلة على قطع من الخشب.</p>
+      </div>
+      <div class="card" onclick="showSteps('clay-sculpting')">
+        <i class="fa-solid fa-mug-hot"></i>
+        <h2>نحت الطين</h2>
+        <p>قم بتشكيل قطع فنية باستخدام الطين وابدأ بتشكيل أشكال فنية من الطين.</p>
+      </div>
+      <div class="card" onclick="showSteps('paper-flowers')">
+        <i class="fa-solid fa-seedling"></i>
+        <h2>صناعة الزهور الورقية</h2>
+        <p>استخدم الورق الملون لصناعة زهور جميلة وملونة لتزيين المنزل.</p>
+      </div>
+      <div class="card" onclick="showSteps('quilling')">
+        <i class="fa-solid fa-scroll"></i>
+        <h2>فن التدوير الورقي</h2>
+        <p>استخدم الورق الملفوف لصنع أشكال زخرفية وفنية.</p>
+      </div>
+      <div class="card" onclick="showSteps('soap-making')">
+        <i class="fa-solid fa-soap"></i>
+        <h2>صناعة الصابون</h2>
+        <p>اصنع صابونك الخاص باستخدام مكونات طبيعية وألوان جميلة.</p>
+      </div>
+      <div class="card" onclick="showSteps('glass-painting')">
+        <i class="fa-solid fa-glass-cheers"></i>
+        <h2>رسم على الزجاج</h2>
+        <p>استخدم الألوان الخاصة بالزجاج لرسم لوحات جميلة على الأكواب أو النوافذ.</p>
+      </div>
+      <div class="card" onclick="showSteps('macrame')">
+        <i class="fa-solid fa-knitting"></i>
+        <h2>فن الماكريم</h2>
+        <p>تعلم كيفية صناعة الحلي والمفروشات باستخدام عقد الخيوط.</p>
+      </div>
+      <div class="card" onclick="showSteps('embroidery')">
+        <i class="fa-solid fa-thread"></i>
+        <h2>فن التطريز</h2>
+        <p>قم بتزيين الملابس والوسائد باستخدام خيوط ملونة وتقنيات التطريز.</p>
+      </div>
+      <div class="card" onclick="showSteps('crochet')">
+        <i class="fa-solid fa-crochet"></i>
+        <h2>فن الكروشيه</h2>
+        <p>اصنع ملابس أو أكسسوارات جميلة باستخدام خيوط الكروشيه وأبرته الخاصة.</p>
+      </div>
+      <div class="card" onclick="showSteps('pottery')">
+        <i class="fa-solid fa-cup"></i>
+        <h2>صناعة الفخار</h2>
+        <p>اصنع تحفًا فنية وأدوات منزلية باستخدام الطين المخصص لصناعة الفخار.</p>
+      </div>
+      <div class="card" onclick="showSteps('handmade-jewelry')">
+        <i class="fa-solid fa-gem"></i>
+        <h2>صناعة المجوهرات اليدوية</h2>
+        <p>قم بتصميم مجوهراتك الخاصة باستخدام الخرز والمعدن.</p>
+      </div>
+      <div class="card" onclick="showSteps('wood-carving')">
+        <i class="fa-solid fa-carving"></i>
+        <h2>فن نحت الخشب</h2>
+        <p>استخدم الأدوات الخاصة لنحت أشكال مختلفة من الخشب بطريقة احترافية.</p>
+      </div>
+      <div class="card" onclick="showSteps('stained-glass')">
+        <i class="fa-solid fa-window-maximize"></i>
+        <h2>فن الزجاج المعشق</h2>
+        <p>اصنع قطع فنية من الزجاج المعشق باستخدام الألوان المختلفة لخلق تصاميم رائعة.</p>
+      </div>
+      <div class="card" onclick="showSteps('recycled-art')">
+        <i class="fa-solid fa-recycle"></i>
+        <h2>الفن المعاد تدويره</h2>
+        <p>استخدم المواد المعاد تدويرها لإنشاء قطع فنية مميزة.</p>
+      </div>
+      <div class="card" onclick="showSteps('wall-decor')">
+        <i class="fa-solid fa-paint-roller"></i>
+        <h2>ديكور الجدران</h2>
+        <p>قم بتصميم جدران منزلية باستخدام الطلاء أو الملصقات لخلق مظهر جديد.</p>
+      </div>
+      <div class="card" onclick="showSteps('potpourri')">
+        <i class="fa-solid fa-lemon"></i>
+        <h2>صناعة البوتبوري</h2>
+        <p>استخدم الزهور المجففة والأعشاب العطرية لصناعة البوتبوري المميز.</p>
+      </div>
+      <div class="card" onclick="showSteps('scrapbooking')">
+        <i class="fa-solid fa-book"></i>
+        <h2>فن الألبومات اليدوية</h2>
+        <p>أنشئ ألبومًا يدويًا من الصور والذكريات باستخدام الورق والأدوات الفنية.</p>
+      </div>
+      <div class="card" onclick="showSteps('leather-crafting')">
+        <i class="fa-solid fa-leaf"></i>
+        <h2>فن صناعة الجلد</h2>
+        <p>استخدم الجلود لصناعة أكسسوارات أو حقائب يدوية رائعة.</p>
+      </div>
+      <div class="card" onclick="showSteps('tie-dye')">
+        <i class="fa-solid fa-tshirt"></i>
+        <h2>فن صبغ القماش</h2>
+        <p>استخدم ألوان قماش خاصة لصبغ الملابس بطريقة مميزة وفريدة.</p>
+      </div>
+      <div class="card" onclick="showSteps('wooden-toys')">
+        <i class="fa-solid fa-gamepad"></i>
+        <h2>صناعة الألعاب الخشبية</h2>
+        <p>اصنع ألعابًا خشبية للأطفال باستخدام الخشب والأدوات المناسبة.</p>
+      </div>
+
+      <!-- المزيد من الأنشطة -->
+    </main>
+    <div class="steps-container" id="steps-container">
+      <div id="wood-painting-steps" class="step">
+        <p><strong>الخطوة 1:</strong> اختر قطعة خشب ناعمة. تأكد من أن السطح أملس وخالي من أي عيوب.</p>
+        <p><strong>الخطوة 2:</strong> قم بتنظيف السطح باستخدام ورق الصنفرة لإزالة أي خشونة.</p>
+        <p><strong>الخطوة 3:</strong> ابدأ بالرسم باستخدام الألوان المائية أو الأكريليك. يمكن أيضًا إضافة تفاصيل بالفرشاة الدقيقة.</p>
+        <p><strong>الخطوة 4:</strong> اترك العمل ليجف تمامًا قبل إضافة طبقة من الطلاء الواقي.</p>
+        <p><strong>الأدوات:</strong> فرشاة، ألوان مائية/أكريليك، ورق صنفرة.</p>
+      </div>
+
+      <div id="paper-flowers-steps" class="step">
+        <p><strong>الخطوة 1:</strong> قطع الورق إلى شكل بتلات الزهور. يمكن استخدام المقص أو القاطع للحصول على حواف ناعمة.</p>
+        <p><strong>الخطوة 2:</strong> قم بطي الورق لخلق طبقات من بتلات الزهور. حاول تنسيق الألوان بشكل جمالي.</p>
+        <p><strong>الخطوة 3:</strong> استخدم الأسلاك لتجميع الأجزاء معًا لصنع الزهرة. تأكد من أن الأسلاك متينة بما يكفي لدعم الزهور.</p>
+        <p><strong>الأدوات:</strong> ورق ملون، مقص، أسلاك، غراء.</p>
+      </div>
+      <div id="clay-sculpting-steps" class="step">
+        <p><strong>الخطوة 1:</strong> اعمل على تحضير الطين باستخدام الماء حتى يصبح طريًا وسهل التشكيل.</p>
+        <p><strong>الخطوة 2:</strong> اختر الأداة المناسبة (مثل أدوات النحت) وابدأ بتشكيل الطين لأشكال مختلفة مثل الزهور أو الحيوانات.</p>
+        <p><strong>الخطوة 3:</strong> بعد الانتهاء من النحت، اترك العمل ليجف تمامًا ثم قم بتلوينه باستخدام ألوان الأكريليك.</p>
+        <p><strong>الأدوات:</strong> طين، أدوات نحت، ألوان أكريليك.</p>
+      </div>
+      <div id="candle-making-steps" class="step">
+        <p><strong>الخطوة 1:</strong> ذوب الشمع باستخدام حمام مائي أو في وعاء خاص.</p>
+        <p><strong>الخطوة 2:</strong> أضف الزيوت العطرية حسب الرغبة للحصول على رائحة مميزة.</p>
+        <p><strong>الخطوة 3:</strong> صب الشمع في القوالب وانتظر حتى يتصلب.</p>
+        <p><strong>الخطوة 4:</strong> بعد أن يصبح الشمع صلبًا، قم بإزالة الشموع من القوالب.</p>
+        <p><strong>الأدوات:</strong> شمع، زيوت عطرية، قوالب.</p>
+      </div>
+    </div>
+      <div id="quilling-steps" class="step">
+        <p><strong>الخطوة 1:</strong> قطع الورق إلى شرائح رقيقة. يمكنك اختيار أي لون تفضله أو تنسيق الألوان حسب التصميم الذي ترغب في صنعه.</p>
+        <p><strong>الخطوة 2:</strong> قم بلف الشرائط الورقية حول أداة اللف (مثل قلم رصاص أو أداة مخصصة) بشكل محكم لتشكيل دائرة صغيرة. حرصًا على أن تكون الحواف متساوية.</p>
+        <p><strong>الخطوة 3:</strong> بعد لف الشريط الورقي، قم بفكه بلطف قليلاً لتشكيل شكل حلزوني. يمكنك تعديل الشكل حسب ما ترغب به (مثل دوائر أو قلوب أو ورود).</p>
+        <p><strong>الخطوة 4:</strong> قم بلصق الشكل الذي قمت بإنشائه على الورقة الأساسية أو اللوحة التي ستعرض عليها التصميم. تأكد من أن جميع الأطراف مثبتة بإحكام باستخدام الغراء.</p>
+        <p><strong>الخطوة 5:</strong> استمر في تشكيل مزيد من الأشكال والتفاصيل الصغيرة مثل الأوراق أو الزهور بإضافة شرائط ورقية ملفوفة صغيرة.</p>
+        <p><strong>الخطوة 6:</strong> بعد إتمام تصميمك، اتركه ليجف تمامًا قبل وضعه في الإطار أو عرضه.</p>
+        <p><strong>الأدوات:</strong> ورق ملون، مقص، غراء، أداة لللف، قاعدة لاصقة أو ورقة أساسية.</p>
+      </div>
+      <div id="candle-making-steps" class="step">
+        <p><strong>الخطوة 1:</strong> ذوب الشمع باستخدام حمام مائي أو في وعاء خاص.</p>
+        <p><strong>الخطوة 2:</strong> أضف الزيوت العطرية حسب الرغبة للحصول على رائحة مميزة.</p>
+        <p><strong>الخطوة 3:</strong> صب الشمع في القوالب وانتظر حتى يتصلب.</p>
+        <p><strong>الخطوة 4:</strong> بعد أن يصبح الشمع صلبًا، قم بإزالة الشموع من القوالب.</p>
+        <p><strong>الأدوات:</strong> شمع، زيوت عطرية، قوالب.</p>
+      </div>
+      <div id="soap-making-steps" class="step">
+        <p><strong>الخطوة 1:</strong> اختر قاعدة صابون جاهزة (مثل الصابون الجلي أو الصابون النباتي).</p>
+        <p><strong>الخطوة 2:</strong> قم بتذويب الصابون باستخدام حمام مائي أو الميكروويف.</p>
+        <p><strong>الخطوة 3:</strong> أضف الزيوت العطرية والملونات الطبيعية للحصول على مظهر ورائحة مميزة.</p>
+        <p><strong>الخطوة 4:</strong> صب الخليط في القوالب وانتظر حتى يتماسك.</p>
+        <p><strong>الأدوات:</strong> صابون قاعدة جاهز، زيوت عطرية، قوالب.</p>
+      </div>
+      <div id="glass-painting-steps" class="step">
+        <p><strong>الخطوة 1:</strong> اختر سطح زجاجي نظيفًا وخاليًا من الأوساخ.</p>
+        <p><strong>الخطوة 2:</strong> ابدأ باستخدام الألوان الخاصة بالزجاج لرسم التصميم المطلوب.</p>
+        <p><strong>الخطوة 3:</strong> يمكن إضافة تفاصيل باستخدام فرشاة دقيقة.</p>
+        <p><strong>الخطوة 4:</strong> اترك العمل ليجف تمامًا قبل الاستخدام أو العرض.</p>
+        <p><strong>الأدوات:</strong> ألوان زجاجية، فرشاة دقيقة.</p>
+      </div>
+      <div id="macrame-steps" class="step">
+        <p><strong>الخطوة 1:</strong> اختر خيوطًا قوية (مثل خيوط القطن أو الجوت).</p>
+        <p><strong>الخطوة 2:</strong> قم بتقطيع الخيوط إلى أطوال مختلفة حسب التصميم المطلوب.</p>
+        <p><strong>الخطوة 3:</strong> تعلم كيفية عقد الخيوط بطرق مختلفة لإنشاء تصميمات جميلة.</p>
+        <p><strong>الخطوة 4:</strong> قم بتثبيت النتيجة باستخدام حلقات أو أكسسوارات مخصصة.</p>
+        <p><strong>الأدوات:</strong> خيوط ماكراميه، حلقات، أدوات لربط العقد.</p>
+      </div>
+      <div id="embroidery-steps" class="step">
+        <p><strong>الخطوة 1:</strong> اختر القماش والخيوط المناسبة للتطريز.</p>
+        <p><strong>الخطوة 2:</strong> رسم التصميم المطلوب على القماش باستخدام قلم خاص.</p>
+        <p><strong>الخطوة 3:</strong> استخدم الإبرة والخيوط لبدء التطريز بعناية.</p>
+        <p><strong>الخطوة 4:</strong> قم بإكمال التطريز والتأكد من تثبيت الخيوط بشكل جيد.</p>
+        <p><strong>الأدوات:</strong> قماش، خيوط تطريز، إبرة.</p>
+      </div>
+      <div id="crochet-steps" class="step">
+        <p><strong>الخطوة 1:</strong> اختر خيوط كروشيه وأبرة تناسب الحجم الذي تريده.</p>
+        <p><strong>الخطوة 2:</strong> تعلم كيفية تكوين السلاسل الأساسية في الكروشيه.</p>
+        <p><strong>الخطوة 3:</strong> اتبع نمطًا معينًا لإنشاء قطعة الكروشيه المطلوبة.</p>
+        <p><strong>الخطوة 4:</strong> أكمل العمل وتأكد من تثبيت الأطراف بشكل جيد.</p>
+        <p><strong>الأدوات:</strong> خيوط كروشيه، أبرة كروشيه.</p>
+      </div>
+      <div id="pottery-steps" class="step">
+        <p><strong>الخطوة 1:</strong> اختر الطين وابدأ بتشكيله باستخدام اليدين أو أدوات النحت.</p>
+        <p><strong>الخطوة 2:</strong> قم بتشكيل القطعة المطلوبة مثل الأكواب أو الزهرات.</p>
+        <p><strong>الخطوة 3:</strong> بعد التشكل، قم بترك القطعة لتجف قبل حرقها في الفرن.</p>
+        <p><strong>الخطوة 4:</strong> بعد الحرق، يمكن تلوين الفخار أو إضافة لمسات أخرى لتزيينه.</p>
+        <p><strong>الأدوات:</strong> طين، أدوات تشكيل، فرن حرق.</p>
+      </div>
+      <div id="handmade-jewelry-steps" class="step">
+        <p><strong>الخطوة 1:</strong> اختر المواد التي ستستخدمها لصناعة المجوهرات مثل الخرز والمعادن.</p>
+        <p><strong>الخطوة 2:</strong> حدد التصميم المطلوب للمجوهرات وقم بإعداد الأدوات اللازمة.</p>
+        <p><strong>الخطوة 3:</strong> قم بتثبيت الخرز أو المعدن معًا لتشكيل القطعة المطلوبة.</p>
+        <p><strong>الخطوة 4:</strong> أكمل العمل بإضافة التفاصيل النهائية مثل الأقفال أو السلاسل.</p>
+        <p><strong>الأدوات:</strong> خرز، معادن، أدوات لحام.</p>
+      </div>
+      <div id="wood-carving-steps" class="step">
+        <p><strong>الخطوة 1:</strong> اختر قطعة خشب صلبة وسلسة.</p>
+        <p><strong>الخطوة 2:</strong> استخدم الأدوات المخصصة للنحت مثل السكاكين أو الإزميل.</p>
+        <p><strong>الخطوة 3:</strong> ابدأ بتشكيل الخشب بحذر للحصول على التفاصيل الدقيقة.</p>
+        <p><strong>الخطوة 4:</strong> بعد النحت، قم بتطبيق الطلاء أو الورنيش لحماية الخشب وإعطائه مظهرًا نهائيًا.</p>
+        <p><strong>الأدوات:</strong> خشب، أدوات نحت، ورنيش.</p>
+      </div>
+      <div id="stained-glass-steps" class="step">
+        <p><strong>الخطوة 1:</strong> اختر الزجاج الملون أو الشفاف حسب تصميمك.</p>
+        <p><strong>الخطوة 2:</strong> قطع الزجاج إلى الأشكال المطلوبة باستخدام أداة القطع.</p>
+        <p><strong>الخطوة 3:</strong> جمع قطع الزجاج معًا باستخدام السلك أو المواد الخاصة بالمعالجة.</p>
+        <p><strong>الخطوة 4:</strong> بعد التأكد من ثبات القطع، ضع الزجاج في الإطار المناسب.</p>
+        <p><strong>الأدوات:</strong> زجاج ملون، أداة قطع الزجاج، سلك.</p>
+      </div>
+      <div id="recycled-art-steps" class="step">
+        <p><strong>الخطوة 1:</strong> جمع المواد المعاد تدويرها مثل الورق، البلاستيك، والمعادن.</p>
+        <p><strong>الخطوة 2:</strong> اختر المواد التي ستساعدك في إنشاء التصميم المطلوب.</p>
+        <p><strong>الخطوة 3:</strong> قم بتشكيل الأجزاء معًا باستخدام الغراء أو البراغي لتكوين القطعة الفنية.</p>
+        <p><strong>الخطوة 4:</strong> قم بطلاء العمل أو تزيينه بألوان زاهية.</p>
+        <p><strong>الأدوات:</strong> مواد معاد تدويرها، غراء، طلاء.</p>
+      </div>
+      <div id="wall-decor-steps" class="step">
+        <p><strong>الخطوة 1:</strong> حدد ما إذا كنت ستستخدم الطلاء أو الملصقات.</p>
+        <p><strong>الخطوة 2:</strong> قم بتحضير السطح وتأكد من أنه نظيف وجاف.</p>
+        <p><strong>الخطوة 3:</strong> ابدأ بتطبيق الطلاء أو تثبيت الملصقات حسب التصميم المطلوب.</p>
+        <p><strong>الخطوة 4:</strong> اترك العمل ليجف تمامًا قبل عرض الجدار كجزء من الديكور النهائي.</p>
+        <p><strong>الأدوات:</strong> طلاء، ملصقات جدارية، فرشاة.</p>
+      </div>
+      <div id="potpourri-steps" class="step">
+        <p><strong>الخطوة 1:</strong> جمع الزهور المجففة مثل الورد والياسمين.</p>
+        <p><strong>الخطوة 2:</strong> أضف الأعشاب العطرية مثل القرفة أو القرنفل لتعزيز الرائحة.</p>
+        <p><strong>الخطوة 3:</strong> ضع جميع المكونات في وعاء مناسب وضعه في مكان جميل في المنزل.</p>
+        <p><strong>الأدوات:</strong> زهور مجففة، أعشاب عطرية.</p>
+      </div>
+      <div id="scrapbooking-steps" class="step">
+        <p><strong>الخطوة 1:</strong> اختر الألبوم وصوره التي ترغب في إضافتها.</p>
+        <p><strong>الخطوة 2:</strong> قم بتخصيص الألبوم باستخدام أوراق ملونة أو ملصقات.</p>
+        <p><strong>الخطوة 3:</strong> تأكد من ترتيب الصور بترتيب زمني أو حسب الموضوع.</p>
+        <p><strong>الخطوة 4:</strong> أضف بعض التفاصيل مثل الرسومات أو الزخارف لزيادة الجمال.</p>
+        <p><strong>الأدوات:</strong> ألبوم، صور، أوراق ملونة، ملصقات.</p>
+      </div>
+      <div id="leather-crafting-steps" class="step">
+        <p><strong>الخطوة 1:</strong> اختر الجلد المناسب لعملك.</p>
+        <p><strong>الخطوة 2:</strong> قم بتقطيع الجلد إلى الأشكال التي تحتاجها باستخدام أداة القطع.</p>
+        <p><strong>الخطوة 3:</strong> قم بتثبيت الأجزاء باستخدام الخيوط أو الغراء الخاص بالجلد.</p>
+        <p><strong>الخطوة 4:</strong> أضف تفاصيل مثل الأزرار أو الإكسسوارات لتكملة القطعة.</p>
+        <p><strong>الأدوات:</strong> جلد، خيوط، غراء، أدوات القطع.</p>
+      </div>
+      <div id="tie-dye-steps" class="step">
+        <p><strong>الخطوة 1:</strong> اختر القماش المناسب وقم بتجهيز الألوان.</p>
+        <p><strong>الخطوة 2:</strong> قم بربط القماش باستخدام خيوط أو أربطة للحصول على تصميمات مختلفة.</p>
+        <p><strong>الخطوة 3:</strong> صبغ القماش باستخدام الألوان التي اخترتها، وتأكدي من توزيع اللون بشكل متساوٍ.</p>
+        <p><strong>الخطوة 4:</strong> اترك القماش ليجف قبل استخدامه أو عرضه.</p>
+        <p><strong>الأدوات:</strong> قماش، ألوان صبغ، خيوط.</p>
+      </div>
+      <div id="wooden-toys-steps" class="step">
+        <p><strong>الخطوة 1:</strong> اختر الخشب المناسب لعمل الألعاب.</p>
+        <p><strong>الخطوة 2:</strong> قم بتقطيع وتشكيل الخشب حسب تصميم اللعبة (مثل سيارات، أو حيوانات).</p>
+        <p><strong>الخطوة 3:</strong> قم بتجميع الأجزاء باستخدام البراغي أو الغراء الخاص بالخشب.</p>
+        <p><strong>الخطوة 4:</strong> أضف الطلاء لجعل اللعبة أكثر جذابة.</p>
+        <p><strong>الأدوات:</strong> خشب، أدوات قطع، طلاء.</p>
+      </div>
+
+      <button class="prev-btn" onclick="goBack()">رجوع</button>
+    </div>
+    <div class="steps-container" id="steps-container-2">
+      
+    </div>
+  </div>
+
+  <script>
+    function goBack() {
+      window.history.back(); // العودة للصفحة السابقة
+    }
+  </script>
+<script>
+  function showSteps(activity) {
+    // إخفاء جميع الخطوات
+    const steps = document.querySelectorAll('.step');
+    steps.forEach(step => {
+      step.classList.remove('active');
+    });
+
+    // عرض الخطوات الخاصة بالنشاط المحدد
+    const stepsContainer = document.getElementById('steps-container');
+    const activitySteps = document.getElementById(`${activity}-steps`);
+    if (activitySteps) {
+      activitySteps.classList.add('active');
+      stepsContainer.style.display = 'block';  // عرض صندوق الخطوات
+      
+      // التمرير لأسفل للوصول إلى الخطوات
+      activitySteps.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+</script>
+
+
+</body>
+</html>

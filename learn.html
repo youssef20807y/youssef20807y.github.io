@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>المكتبة التعليمية</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    /* تصميم عام */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: #fff;
+      display: flex;
+      flex-direction: column; /* تغيير الاتجاه ليكون عمودي */
+      align-items: center;
+    }
+
+    .app-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start; /* تغيير التمركز ليظهر الجزء العلوي */
+      align-items: center;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+    }
+
+    .app-header {
+      text-align: center;
+      padding: 5vh 0; /* إضافة مسافة أعلى وأسفل */
+      background: rgba(0, 0, 0, 0.2);
+      width: 100%;
+    }
+
+    .app-header h1 {
+      font-size: 5vw;
+      margin-bottom: 2vh;
+    }
+
+    .app-header p {
+      font-size: 4vw;
+      opacity: 0.8;
+    }
+
+    .app-main {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3vh;
+      padding: 5vw;
+      width: 100%; /* ضمان التناسب */
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 5vh 3vw;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .card i {
+      font-size: 8vw;
+      margin-bottom: 2vh;
+      color: #ffd700;
+    }
+
+    .card h2 {
+      font-size: 5vw;
+      margin-bottom: 1vh;
+    }
+
+    .card p {
+      font-size: 4vw;
+      opacity: 0.8;
+    }
+
+    .app-footer {
+      text-align: center;
+      padding: 2vh;
+      background: rgba(0, 0, 0, 0.2);
+      font-size: 3vw;
+      opacity: 0.8;
+      position: relative;
+      width: 100%;
+    }
+
+    .back-button {
+      background-color: #2575fc;
+      color: white;
+      padding: 1.5vh 3vw;
+      border-radius: 5px;
+      font-size: 4vw;
+      text-align: center;
+      cursor: pointer;
+      margin-top: 2vh;
+      transition: background-color 0.3s;
+    }
+
+    .back-button:hover {
+      background-color: #6a11cb;
+    }
+
+    /* تحسين التصميم للشاشات الصغيرة جدًا */
+    @media (max-width: 480px) {
+      body {
+        padding: 0; /* إزالة أي هوامش */
+      }
+
+      .card {
+        padding: 4vh 2vw;
+      }
+
+      .card i {
+        font-size: 10vw;
+      }
+
+      .card h2 {
+        font-size: 6vw;
+      }
+
+      .card p {
+        font-size: 4.5vw;
+      }
+
+      .back-button {
+        font-size: 5vw;
+        padding: 2vh 4vw;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- محتوى التطبيق -->
+  <div class="app-container">
+    <header class="app-header">
+      <h1>📚 المكتبة التعليمية</h1>
+      <p>مصادر تعلم شاملة لتحسين مهاراتك!</p>
+    </header>
+    <main class="app-main">
+        <div class="card" onclick="window.location.href='https://www.udacity.com'">
+            <i class="fa-solid fa-robot"></i>
+            <h2>يو داسيتي</h2>
+            <p>دورات تعليمية في الذكاء الاصطناعي والتكنولوجيا.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.pluralsight.com'">
+            <i class="fa-solid fa-cogs"></i>
+            <h2>بلورالسايت</h2>
+            <p>دورات تدريبية في تطوير البرمجيات وتقنية المعلومات.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.linkedin.com/learning'">
+            <i class="fa-solid fa-network-wired"></i>
+            <h2>لينكد إن للتعليم</h2>
+            <p>دورات تعليمية لمهارات العمل والتطوير المهني.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.skillshare.com'">
+            <i class="fa-solid fa-paint-brush"></i>
+            <h2>سكيل شير</h2>
+            <p>دورات تعليمية في التصميم والفنون والإبداع.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.futurelearn.com'">
+            <i class="fa-solid fa-calendar-day"></i>
+            <h2>فيوتشر ليرن</h2>
+            <p>دورات عبر الإنترنت من جامعات ومؤسسات عالمية.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.udemy.com'">
+            <i class="fa-solid fa-video"></i>
+            <h2>يو ديمي</h2>
+            <p>دورات تعليمية في مختلف المجالات.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.treehouse.com'">
+            <i class="fa-solid fa-laptop-code"></i>
+            <h2>تري هاوس</h2>
+            <p>دورات تدريبية لتعلم البرمجة والتصميم.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.codecademy.com'">
+            <i class="fa-solid fa-code"></i>
+            <h2>كود أكاديمي</h2>
+            <p>دورات لتعلم البرمجة والتطوير.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.khanacademy.org'">
+            <i class="fa-solid fa-chalkboard-teacher"></i>
+            <h2>أكاديمية خان</h2>
+            <p>تعلم مجانا عبر الإنترنت في العديد من المواضيع.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.edx.org'">
+            <i class="fa-solid fa-book-open"></i>
+            <h2>إدكس</h2>
+            <p>دورات تعليمية من الجامعات العالمية.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.coursera.org'">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <h2>كورسرّا</h2>
+            <p>دورات من جامعات مرموقة حول العالم.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.memrise.com'">
+            <i class="fa-solid fa-language"></i>
+            <h2>ميمرايز</h2>
+            <p>تعلم اللغات بسهولة واحتراف.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.duolingo.com'">
+            <i class="fa-solid fa-headset"></i>
+            <h2>دولينجو</h2>
+            <p>تعلم اللغات بشكل تفاعلي وممتع.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.openlearn.open.ac.uk'">
+            <i class="fa-solid fa-university"></i>
+            <h2>أوبن ليرن</h2>
+            <p>دورات أكاديمية مجانية من جامعة أوبن.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.coursera.org'">
+            <i class="fa-solid fa-user-graduate"></i>
+            <h2>كورسرّا</h2>
+            <p>دورات من جامعات مرموقة.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.acethetest.com'">
+            <i class="fa-solid fa-pencil-alt"></i>
+            <h2>آيس ذا تيست</h2>
+            <p>تحضير لاختبارات القبول الجامعي.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.academicearth.org'">
+            <i class="fa-solid fa-chalkboard"></i>
+            <h2>أكاديميك إيرث</h2>
+            <p>دورات من أفضل الجامعات في العالم.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.coursera.org'">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <h2>كورسرّا</h2>
+            <p>دورات تعليمية مع شهادات معترف بها.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.britishcouncil.org'">
+            <i class="fa-solid fa-language"></i>
+            <h2>المجلس الثقافي البريطاني</h2>
+            <p>تعلم اللغة الإنجليزية عبر الإنترنت.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.codecademy.com'">
+            <i class="fa-solid fa-code"></i>
+            <h2>كود أكاديمي</h2>
+            <p>دورات تعليمية لتعلم البرمجة.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.khanacademy.org'">
+            <i class="fa-solid fa-chalkboard-teacher"></i>
+            <h2>أكاديمية خان</h2>
+            <p>دورات مجانية في العديد من المجالات.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.futurelearn.com'">
+            <i class="fa-solid fa-calendar-day"></i>
+            <h2>فيوتشر ليرن</h2>
+            <p>دورات من جامعات ومؤسسات عالمية.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.udacity.com'">
+            <i class="fa-solid fa-robot"></i>
+            <h2>يو داسيتي</h2>
+            <p>دورات في الذكاء الاصطناعي والتكنولوجيا.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.pluralsight.com'">
+            <i class="fa-solid fa-cogs"></i>
+            <h2>بلورالسايت</h2>
+            <p>دورات تدريبية في البرمجة وتقنية المعلومات.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.skillshare.com'">
+            <i class="fa-solid fa-paint-brush"></i>
+            <h2>سكيل شير</h2>
+            <p>دورات في الفنون والتصميم والإبداع.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.academia.edu'">
+            <i class="fa-solid fa-book"></i>
+            <h2>أكاديميا</h2>
+            <p>موقع أكاديمي يحتوي على أبحاث علمية ومقالات.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.alison.com'">
+            <i class="fa-solid fa-university"></i>
+            <h2>أليسون</h2>
+            <p>دورات تعليمية مع شهادات معترف بها.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.udemy.com'">
+            <i class="fa-solid fa-laptop-code"></i>
+            <h2>يو ديمي</h2>
+            <p>دورات في البرمجة والتكنولوجيا.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.openlearn.open.ac.uk'">
+            <i class="fa-solid fa-university"></i>
+            <h2>أوبن ليرن</h2>
+            <p>دورات أكاديمية مجانية من جامعة أوبن.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.duolingo.com'">
+            <i class="fa-solid fa-headset"></i>
+            <h2>دولينجو</h2>
+            <p>تعلم اللغات بسهولة.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.edx.org'">
+            <i class="fa-solid fa-book-open"></i>
+            <h2>إدكس</h2>
+            <p>دورات أكاديمية من أفضل الجامعات.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.coursera.org'">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <h2>كورسرّا</h2>
+            <p>دورات من جامعات مرموقة.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.accordingtoscript.com'">
+            <i class="fa-solid fa-code"></i>
+            <h2>أكورنينغ تو سكريبت</h2>
+            <p>دورات تعلم البرمجة بلغة سكريبت.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.coursera.org'">
+            <i class="fa-solid fa-user-graduate"></i>
+            <h2>كورسرّا</h2>
+            <p>دورات مع شهادات معترف بها من جامعات.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.academicearth.org'">
+            <i class="fa-solid fa-university"></i>
+            <h2>أكاديميك إيرث</h2>
+            <p>دورات من جامعات كبيرة.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.open2study.com'">
+            <i class="fa-solid fa-laptop"></i>
+            <h2>أوبن تو ستادي</h2>
+            <p>دورات مجانية عبر الإنترنت.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.mooc.org'">
+            <i class="fa-solid fa-cogs"></i>
+            <h2>موك</h2>
+            <p>منصة تعليمية مفتوحة للدورات عبر الإنترنت.</p>
+          </div>
+          <div class="card" onclick="window.location.href='https://www.learndigital.withgoogle.com'">
+            <i class="fa-solid fa-laptop-code"></i>
+            <h2>تعلم رقمي مع جوجل</h2>
+            <p>دورات تدريبية في المهارات الرقمية.</p>
+          </div>
+                    
+    </main>
+    <footer class="app-footer">
+      <p>© 2024 المكتبة التعليمية</p>
+      <div class="back-button" onclick="window.history.back()">رجوع</div>
+    </footer>
+  </div>
+</body>
+</html>
